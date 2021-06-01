@@ -1,13 +1,17 @@
-ARG TERRAFORM_VERSION=0.15.4
 ARG AWS_CLI_VERSION=2.2.7
+ARG TERRAFORM_VERSION=0.15.4
+
+FROM amazon/aws-cli:${AWS_CLI_VERSION} as installer
+RUN yum update -y \
+    && yum install -y unzip \
+    && curl -sSO https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip \
+    && unzip terraform_${TERRAFORM_VERSION}_linux_amd64.zip
 
 FROM amazon/aws-cli:${AWS_CLI_VERSION}
-
 RUN yum update -y \
-    && yum install -y yum-utils \
-    && yum-config-manager --add-repo https://rpm.releases.hashicorp.com/AmazonLinux/hashicorp.repo \
-    && yum install -y jq terraform-${TERRAFORM_VERSION} \
-    && yum clean all
-
+    && yum install -y jq \
+    && yum clean all \
+    && rm -rf /var/cache/yum
+COPY --from=installer /terraform /usr/local/bin/
 WORKDIR /workspace
 ENTRYPOINT ["terraform"]
