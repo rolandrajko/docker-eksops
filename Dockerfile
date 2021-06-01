@@ -13,7 +13,7 @@ ARG AWS_CLI_VERSION
 RUN yum update -y \
     && yum install -y unzip \
     && curl -sSO https://awscli.amazonaws.com/awscli-exe-linux-x86_64-${AWS_CLI_VERSION}.zip \
-    && unzip awscli-exe-linux-x86_64-${AWS_CLI_VERSION}.zip
+    && unzip awscli-exe-linux-x86_64-${AWS_CLI_VERSION}.zip \
     && ./aws/install --bin-dir /aws-cli-bin
 
 FROM amazonlinux:2
