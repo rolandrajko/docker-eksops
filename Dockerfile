@@ -1,11 +1,12 @@
 ARG AWS_CLI_VERSION=2.2.7
 ARG TERRAFORM_VERSION=0.15.4
 
-FROM amazon/aws-cli:${AWS_CLI_VERSION} as installer
+FROM amazonlinux:2 as installer
+ARG TERRAFORM_VERSION
 RUN yum update -y \
     && yum install -y unzip \
     && curl -sSO https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip \
-    && unzip terraform_${TERRAFORM_VERSION}_linux_amd64.zip
+    && unzip -j terraform_${TERRAFORM_VERSION}_linux_amd64.zip
 
 FROM amazon/aws-cli:${AWS_CLI_VERSION}
 RUN yum update -y \
