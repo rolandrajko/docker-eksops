@@ -20,9 +20,9 @@ RUN yum update -y \
 FROM amazonlinux:2 as kubectl
 ARG KUBECTL_VERSION
 RUN curl -sSLO https://dl.k8s.io/release/v${KUBECTL_VERSION}/bin/linux/amd64/kubectl \
-    curl -sSLO https://dl.k8s.io/v${KUBECTL_VERSION}/bin/linux/amd64/kubectl.sha256 \
-    echo "$(<kubectl.sha256) kubectl" | sha256sum --check \
-    chmod +x kubectl
+    && curl -sSLO https://dl.k8s.io/v${KUBECTL_VERSION}/bin/linux/amd64/kubectl.sha256 \
+    && echo "$(<kubectl.sha256) kubectl" | sha256sum --check \
+    && chmod +x kubectl
 
 FROM amazonlinux:2
 RUN yum update -y \
