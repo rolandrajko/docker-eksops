@@ -13,14 +13,23 @@ RUN yum update -y \
 
 FROM amazonlinux:2 as helm
 ARG HELM_VERSION
+# RUN yum update -y \
+#     && yum install -y \
+#         gzip \
+#         openssl \
+#         tar \
+#     && curl -sSLo get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 \
+#     && chmod 700 get_helm.sh \
+#     && ./get_helm.sh --version v${HELM_VERSION}
 RUN yum update -y \
     && yum install -y \
         gzip \
-        openssl \
         tar \
-    && curl -sSLo get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 \
-    && chmod 700 get_helm.sh \
-    && ./get_helm.sh --version v${HELM_VERSION}
+    && curl -sSLO https://get.helm.sh/helm-v${HELM_VERSION}-linux-amd64.tar.gz \
+    && curl -sSLO https://get.helm.sh/helm-v${HELM_VERSION}-linux-amd64.tar.gz.sha256sum \
+    && sha256sum --check helm-v${HELM_VERSION}-linux-amd64.tar.gz.sha256sum \
+    && tar -zxvf helm-v${HELM_VERSION}-linux-amd64.tar.gz \
+    && mv linux-amd64/helm /usr/local/bin/helm
 
 FROM amazonlinux:2 as kubectl
 ARG KUBECTL_VERSION
