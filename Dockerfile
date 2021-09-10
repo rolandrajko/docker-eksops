@@ -1,7 +1,8 @@
-ARG AWS_CLI_VERSION=2.2.22
-ARG KUBECTL_VERSION=1.21.3
+ARG AWS_CLI_VERSION=2.2.36
+# https://dl.k8s.io/release/stable.txt
+ARG KUBECTL_VERSION=1.22.1
 ARG HELM_VERSION=3.6.3
-ARG TERRAFORM_VERSION=1.0.3
+ARG TERRAFORM_VERSION=1.0.6
 
 FROM amazonlinux:2 as aws-cli
 ARG AWS_CLI_VERSION
@@ -13,14 +14,6 @@ RUN yum update -y \
 
 FROM amazonlinux:2 as helm
 ARG HELM_VERSION
-# RUN yum update -y \
-#     && yum install -y \
-#         gzip \
-#         openssl \
-#         tar \
-#     && curl -sSLo get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 \
-#     && chmod 700 get_helm.sh \
-#     && ./get_helm.sh --version v${HELM_VERSION}
 RUN yum update -y \
     && yum install -y \
         gzip \
@@ -59,5 +52,7 @@ COPY --from=aws-cli /aws-cli-bin/ /usr/local/bin/
 COPY --from=helm /usr/local/bin/helm /usr/local/bin/
 COPY --from=kubectl /kubectl /usr/local/bin/
 COPY --from=terraform /terraform /usr/local/bin/
+RUN echo "complete -C '/usr/local/bin/aws_completer' aws" >> /root/.bashrc \
+    && terraform -install-autocomplete
 WORKDIR /workspace
-ENTRYPOINT ["terraform"]
+ENTRYPOINT ["bash"]
