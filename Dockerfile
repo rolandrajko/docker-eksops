@@ -1,8 +1,11 @@
-ARG AWS_CLI_VERSION=2.2.36
+# https://github.com/aws/aws-cli/blob/v2/CHANGELOG.rst
+ARG AWS_CLI_VERSION=2.8.13
 # https://dl.k8s.io/release/stable.txt
-ARG KUBECTL_VERSION=1.22.1
-ARG HELM_VERSION=3.6.3
-ARG TERRAFORM_VERSION=1.0.6
+ARG KUBECTL_VERSION=1.25.4
+# https://github.com/helm/helm/releases
+ARG HELM_VERSION=3.10.2
+# https://github.com/hashicorp/terraform/releases
+ARG TERRAFORM_VERSION=1.3.5
 
 FROM amazonlinux:2 as aws-cli
 ARG AWS_CLI_VERSION
